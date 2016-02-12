@@ -1,0 +1,28 @@
+{
+  "name": "flow-static",
+  "version": "1.0.0",
+  "description": "Stream static files.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jillix/flow-static.git"
+  },
+  "keywords": [
+    "flow",
+    "static",
+    "files",
+    "stream"
+  ],
+  "author": "Adrian Ottiker <adrian@ottiker.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jillix/flow-static/issues"
+  },
+  "homepage": "https://github.com/jillix/flow-static#readme",
+  "dependencies": {
+    "send": "^0.13.1"
+  }
+}
