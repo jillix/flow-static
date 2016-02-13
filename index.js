@@ -68,7 +68,11 @@ exports.static = function (chain, options, onError) {
     //}
 
     send(options.req, file, {root: path.join(this._env.workDir, options._.wd || '')})
-    .on('error', onError)
+    .on('error', function (err) {
+        options.res.statusCode = err.status || 500;
+        options.res.end(err.stack);
+        onError(err);
+    })
     .on('headers', headers)
     .pipe(options.res);
 };
