@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/jillix/flow-static#readme",
   "dependencies": {
+    "libobject": "github:jillix/libobject",
     "send": "^0.13.1"
   }
 }

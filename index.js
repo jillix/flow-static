@@ -1,32 +1,15 @@
 var fs = require('fs');
 var path = require('path');
 var send = require('send');
+var libob = require('libobject');
 var isFile = /\/[^.]+\.[a-z0-9]+$/gi;
 
-function byString (path, object) {
-
-    if (!path || !object) {
-        return;
-    }
-
-    // prepare path
-    path = path.split('.');
-
-    // find keys in paths or return
-    for (var i = 0; i < path.length; ++i) {
-        if ((object = object[path[i]]) === undefined) {
-            return;
-        }
-    }
-
-    return object;
-}
 // your custom headers
 function headers(res, path, stat) {
 
-    // TODO add compression headers 
+    // add http headers 
     if (path.substr(-3, 3) === '.js') {
-        //res.setHeader('Content-Encoding', 'gzip');
+        res.setHeader('Content-Encoding', 'gzip');
     }
 }
 
@@ -37,7 +20,7 @@ exports.static = function (chain, options, onError) {
     if (file instanceof Array) {
         var tmp = '';
         file.forEach(function (path) {
-            tmp += '/' + byString(path, options) || '';
+            tmp += '/' + libob.path(path, options) || '';
         });
         file = tmp;
     }
@@ -66,6 +49,7 @@ exports.static = function (chain, options, onError) {
         //.on('headers', headers)
         //.pipe(res.push(options.push.url, options.push.options || {}));
     //}
+    //console.log('Static file:', path.join(this._env.workDir, options._.wd || ''), file);
 
     send(options.req, file, {root: path.join(this._env.workDir, options._.wd || '')})
     .on('error', function (err) {
