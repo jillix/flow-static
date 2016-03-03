@@ -14,23 +14,15 @@ function headers(res, path, stat) {
 }
 
 exports.static = function (chain, options, onError) {
+    libob.change(options._, options);
     var file = options.file || options._.file || options.req.url;
-
-    // create dynamic file path
-    if (file instanceof Array) {
-        var tmp = '';
-        file.forEach(function (path) {
-            tmp += '/' + libob.path(path, options) || '';
-        });
-        file = tmp;
-    }
 
     // normalize public path
     file = path.normalize(file);
 
     // add index.html to path
     if (file[file.length-1] === '/') {
-        file += 'index.html';
+        file = 'index.html';
     }
 
     // push the engine client directly
@@ -49,7 +41,7 @@ exports.static = function (chain, options, onError) {
         //.on('headers', headers)
         //.pipe(res.push(options.push.url, options.push.options || {}));
     //}
-    //console.log('Static file:', path.join(this._env.workDir, options._.wd || ''), file);
+    console.log('Static file:', path.join(this._env.workDir, options._.wd || ''), file);
 
     send(options.req, file, {root: path.join(this._env.workDir, options._.wd || '')})
     .on('error', function (err) {
