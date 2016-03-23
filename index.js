@@ -3,6 +3,7 @@ var path = require('path');
 var send = require('send');
 var libob = require('libobject');
 var isFile = /\/[^.]+\.[a-z0-9]+$/gi;
+var cwd = process.cwd();
 
 // your custom headers
 function headers(res, path, stat) {
@@ -13,7 +14,7 @@ function headers(res, path, stat) {
     }
 }
 
-exports.static = function (chain, options, onError) {
+exports.static = function (options, stream) {
     libob.change(options._, options);
     var file = options.file || options._.file || options.req.url;
 
@@ -41,13 +42,14 @@ exports.static = function (chain, options, onError) {
         //.on('headers', headers)
         //.pipe(res.push(options.push.url, options.push.options || {}));
     //}
-    console.log('Static file:', path.join(this._env.workDir, options._.wd || ''), file);
+    //console.log('Static file:', path.join(cwd, options._.wd || ''), file);
 
-    send(options.req, file, {root: path.join(this._env.workDir, options._.wd || '')})
+    send(options.req, file, {root: path.join(cwd, options._.wd || '')})
     .on('error', function (err) {
         options.res.statusCode = err.status || 500;
         options.res.end(err.stack);
-        onError(err);
+        console.log('Flow-static.static:', err.stack);
+        //stream.emit('error', err);
     })
     .on('headers', headers)
     .pipe(options.res);
