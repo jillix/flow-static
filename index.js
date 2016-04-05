@@ -43,7 +43,7 @@ exports.static = function (options, stream) {
         //.pipe(res.push(options.push.url, options.push.options || {}));
     //}
     //console.log('Static file:', path.join(cwd, options._.wd || ''), file);
-
+    //options.req.resume();
     send(options.req, file, {root: path.join(cwd, options._.wd || '')})
     .on('error', function (err) {
         options.res.statusCode = err.status || 500;
