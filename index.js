@@ -14,9 +14,10 @@ function headers(res, path, stat) {
     }
 }
 
-exports.static = function (options, stream) {
-    libob.change(options._, options);
-    var file = options.file || options._.file || options.req.url;
+exports.static = function (options, data, next) {
+
+    //libob.path(options._, data);
+    var file = options.file || options._.file || data.params.name || data.req.url
 
     // normalize public path
     file = path.normalize(file);
@@ -43,14 +44,16 @@ exports.static = function (options, stream) {
         //.pipe(res.push(options.push.url, options.push.options || {}));
     //}
     //console.log('Static file:', path.join(cwd, options._.wd || ''), file);
-    //options.req.resume();
-    send(options.req, file, {root: path.join(cwd, options._.wd || '')})
+
+    send(data.req, file, {root: path.join(cwd, options._.wd || '')})
     .on('error', function (err) {
-        options.res.statusCode = err.status || 500;
-        options.res.end(err.stack);
+        data.res.statusCode = err.status || 500;
+        data.res.end(err.stack);
         console.log('Flow-static.static:', err.stack);
         //stream.emit('error', err);
     })
     .on('headers', headers)
-    .pipe(options.res);
+    .pipe(data.res);
+
+    next(null, data);
 };
