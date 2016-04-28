@@ -16,6 +16,10 @@ function headers(res, path, stat) {
 
 exports.static = function (options, data, next) {
 
+    if (!data.req || !data.res) {
+        return next(new Error('Flow-static.static: No request or response stream found.'));
+    }
+
     //libob.path(options._, data);
     var file = options.file || options._.file || data.params.name || data.req.url
 
@@ -49,8 +53,6 @@ exports.static = function (options, data, next) {
     .on('error', function (err) {
         data.res.statusCode = err.status || 500;
         data.res.end(err.stack);
-        console.log('Flow-static.static:', err.stack);
-        //stream.emit('error', err);
     })
     .on('headers', headers)
     .pipe(data.res);
