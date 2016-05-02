@@ -4,6 +4,7 @@ var send = require('send');
 var libob = require('libobject');
 var isFile = /\/[^.]+\.[a-z0-9]+$/gi;
 var cwd = process.cwd();
+var url = require('url');
 
 // your custom headers
 function headers(res, path, stat) {
@@ -21,7 +22,7 @@ exports.static = function (options, data, next) {
     }
 
     //libob.path(options._, data);
-    var file = options.file || options._.file || data.params.name || data.req.url
+    var file = options.file || options._.file || data.params.name || url.parse(data.req.url).pathname;
 
     // normalize public path
     file = path.normalize(file);
