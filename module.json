@@ -1,12 +1,12 @@
 {
     "@context": [
-        "http://localhost:8080/context/module.jsonld",
+        "http://schema.jillix.net/context/module.jsonld",
         {
             "file": "http://dbpedia.org/property/file",
             "wd": "http://dbpedia.org/property/directory"
         }
     ],
-    "@id": "https://github.com/jillix/flow-static#readme",
+    "@id": "https://raw.githubusercontent.com/jillix/flow-static/master/module.json",
     "@type": "Module",
     "name": "flow-static",
     "version": "0.0.1",
@@ -15,11 +15,11 @@
     "gitRepository": "git+https://github.com/jillix/flow-static.git",
     "exports": [
         {
+            "@id": "https://raw.githubusercontent.com/jillix/flow-static/master/module.json#static",
             "@type": "DataHandler",
             "name": "static",
-            "options": []
+            "args": []
         }
     ],
-    "options": [
-    ]
+    "args": []
 }
