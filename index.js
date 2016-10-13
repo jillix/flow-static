@@ -21,7 +21,7 @@ exports.static = function (options, data, next) {
         return next(new Error('Flow-static.static: No request or response stream found.'));
     }
 
-    //libob.path(options._, data);
+    //libob.path(options, data);
     var file = options.file || data.params.name || url.parse(data.req.url).pathname;
 
     // normalize public path
@@ -43,12 +43,12 @@ exports.static = function (options, data, next) {
                 'Content-Length': clientFile.length
             }
         }*/
-        //send(options.req, file, {root: path.join(this._env.workDir, options._.wd || '')})
+        //send(options.req, file, {root: path.join(this._env.workDir, options.wd || '')})
         //.on('error', onError)
         //.on('headers', headers)
         //.pipe(res.push(options.push.url, options.push.options || {}));
     //}
-    //console.log('Static file:', path.join(cwd, options._.wd || ''), file);
+    //console.log('Static file:', path.join(cwd, options.wd || ''), file);
 
     send(data.req, file, {root: path.join(cwd, options.wd || '')})
     .on('error', function (err) {
