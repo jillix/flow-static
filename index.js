@@ -22,7 +22,7 @@ exports.static = function (options, data, next) {
     }
 
     //libob.path(options._, data);
-    var file = options.file || options._.file || data.params.name || url.parse(data.req.url).pathname;
+    var file = options.file || data.params.name || url.parse(data.req.url).pathname;
 
     // normalize public path
     file = path.normalize(file);
@@ -50,7 +50,7 @@ exports.static = function (options, data, next) {
     //}
     //console.log('Static file:', path.join(cwd, options._.wd || ''), file);
 
-    send(data.req, file, {root: path.join(cwd, options._.wd || '')})
+    send(data.req, file, {root: path.join(cwd, options.wd || '')})
     .on('error', function (err) {
         data.res.statusCode = err.status || 500;
         data.res.end(err.stack);
