@@ -11,7 +11,7 @@ function headers(res, path, stat) {
 
     // add http headers 
     if (path.substr(-3, 3) === '.js') {
-        res.setHeader('Content-Encoding', 'gzip');
+        //res.setHeader('Content-Encoding', 'gzip');
     }
 }
 
@@ -22,7 +22,7 @@ exports.static = function (args, data, next) {
     }
 
     //libob.path(args, data);
-    var file = args.file || data.params.name || url.parse(data.req.url).pathname;
+    var file = args.file || data.file || data.params.name || url.parse(data.req.url).pathname;
 
     // normalize public path
     file = path.normalize(file);
