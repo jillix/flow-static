@@ -15,27 +15,27 @@ function headers(res, path, stat) {
     }
 }
 
-exports.static = function (options, data, next) {
+exports.static = function (args, data, next) {
 
     if (!data.req || !data.res) {
         return next(new Error('Flow-static.static: No request or response stream found.'));
     }
 
-    //libob.path(options, data);
-    var file = options.file || data.params.name || url.parse(data.req.url).pathname;
+    //libob.path(args, data);
+    var file = args.file || data.params.name || url.parse(data.req.url).pathname;
 
     // normalize public path
     file = path.normalize(file);
 
     // add index.html to path
-    if (file[file.length-1] === '/') {
+    /*if (file[file.length-1] === '/') {
         file = 'index.html';
-    }
+    }*/
 
     // push the engine client directly
-    //if (options.push && res.push) {
+    //if (args.push && res.push) {
 
-        /*push.options: {
+        /*push.args: {
             request: {accept: '*'+'/'+'*'},
             response: {
                 'Content-Type': 'application/javascript',
@@ -43,14 +43,14 @@ exports.static = function (options, data, next) {
                 'Content-Length': clientFile.length
             }
         }*/
-        //send(options.req, file, {root: path.join(this._env.workDir, options.wd || '')})
+        //send(args.req, file, {root: path.join(this._env.workDir, args.wd || '')})
         //.on('error', onError)
         //.on('headers', headers)
-        //.pipe(res.push(options.push.url, options.push.options || {}));
+        //.pipe(res.push(args.push.url, args.push.args || {}));
     //}
-    //console.log('Static file:', path.join(cwd, options.wd || ''), file);
+    //console.log('Static file:', path.join(cwd, args.wd || ''), file);
 
-    send(data.req, file, {root: path.join(cwd, options.wd || '')})
+    send(data.req, file, {root: path.join(cwd, args.wd || '')})
     .on('error', function (err) {
         data.res.statusCode = err.status || 500;
         data.res.end(err.stack);
