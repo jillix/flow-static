@@ -11,7 +11,7 @@ function headers(res, path, stat) {
 
     // add http headers 
     if (path.substr(-3, 3) === '.js') {
-        //res.setHeader('Content-Encoding', 'gzip');
+        res.setHeader('Content-Encoding', 'gzip');
     }
 }
 
