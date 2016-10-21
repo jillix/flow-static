@@ -7,7 +7,11 @@ var cwd = process.cwd();
 var url = require('url');
 
 // your custom headers
-function headers(res, path, stat) {
+function headers(res, path, headers) {
+
+    if (headers) {
+        Object.keys(headers).forEach(key => res.setHeader(key, headers[key]));
+    }
 
     // add http headers 
     if (path.substr(-3, 3) === '.js') {
@@ -49,13 +53,12 @@ exports.static = function (args, data, next) {
         //.pipe(res.push(args.push.url, args.push.args || {}));
     //}
     //console.log('Static file:', path.join(cwd, args.wd || ''), file);
-
     send(data.req, file, {root: path.join(cwd, args.wd || '')})
     .on('error', function (err) {
         data.res.statusCode = err.status || 500;
         data.res.end(err.stack);
     })
-    .on('headers', headers)
+    .on('headers', (res, path) => headers(res, path, args.headers))
     .pipe(data.res);
 
     next(null, data);
