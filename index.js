@@ -7,8 +7,9 @@ var cwd = process.cwd();
 var url = require('url');
 
 // your custom headers
-function headers(res, path, headers) {
+function headers(res, path, headers, dataHeaders) {
 
+    headers = dataHeaders ? Object.assign(headers, dataHeaders) : headers;
     if (headers) {
         Object.keys(headers).forEach(key => res.setHeader(key, headers[key]));
     }
@@ -58,7 +59,7 @@ exports.static = function (args, data, next) {
         data.res.statusCode = err.status || 500;
         data.res.end(err.stack);
     })
-    .on('headers', (res, path) => headers(res, path, args.headers))
+    .on('headers', (res, path) => headers(res, path, args.headers, data.headers))
     .pipe(data.res);
 
     next(null, data);
