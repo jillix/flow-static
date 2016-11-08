@@ -1,7 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 var send = require('send');
-var libob = require('libobject');
 var isFile = /\/[^.]+\.[a-z0-9]+$/gi;
 var cwd = process.cwd();
 var url = require('url');
@@ -20,13 +19,12 @@ function headers(res, path, headers, dataHeaders) {
     }
 }
 
-exports.static = function (args, data, next) {
+exports.static = function (scope, inst, args, data, next) {
 
     if (!data.req || !data.res) {
         return next(new Error('Flow-static.static: No request or response stream found.'));
     }
 
-    //libob.path(args, data);
     var file = args.file || data.file || data.params.name || url.parse(data.req.url).pathname;
 
     // normalize public path
