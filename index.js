@@ -2,7 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var send = require('send');
 var isFile = /\/[^.]+\.[a-z0-9]+$/gi;
-var cwd = process.cwd();
 var url = require('url');
 
 // your custom headers
@@ -51,8 +50,8 @@ exports.static = function (scope, inst, args, data, next) {
         //.on('headers', headers)
         //.pipe(res.push(args.push.url, args.push.args || {}));
     //}
-    //console.log('Static file:', path.join(cwd, args.wd || ''), file);
-    send(data.req, file, {root: path.join(cwd, args.wd || '')})
+    //console.log('Static file:', scope.env._appDir, args.wd, path.join(scope.env._appDir, args.wd || ''), file);
+    send(data.req, file, {root: path.join(scope.env._appDir, args.wd || '')})
     .on('error', function (err) {
         data.res.statusCode = err.status || 500;
         data.res.end(err.stack);
