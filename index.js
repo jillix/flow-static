@@ -24,10 +24,12 @@ exports.static = function (scope, inst, args, data, next) {
         return next(new Error('Flow-static.static: No request or response stream found.'));
     }
 
-    var file = args.file || data.file || data.params.name || url.parse(data.req.url).pathname;
-
-    // normalize public path
-    file = path.normalize(file);
+    // resolve file path
+    const file = path.resolve(
+        scope.env._appDir,
+        args.wd || '',
+        args.file || data.file || data.params.name || url.parse(data.req.url).pathname.substr(1)
+    );
 
     // add index.html to path
     /*if (file[file.length-1] === '/') {
@@ -50,8 +52,8 @@ exports.static = function (scope, inst, args, data, next) {
         //.on('headers', headers)
         //.pipe(res.push(args.push.url, args.push.args || {}));
     //}
-    //console.log('Static file:', scope.env._appDir, args.wd, path.join(scope.env._appDir, args.wd || ''), file);
-    send(data.req, file, {root: path.join(scope.env._appDir, args.wd || '')})
+    //console.log('Static file:', path.resolve(scope.env._appDir, args.wd || '', file));
+    send(data.req, file)
     .on('error', function (err) {
         data.res.statusCode = err.status || 500;
         data.res.end(err.stack);
