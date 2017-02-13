@@ -18,7 +18,7 @@ function headers(res, path, headers, dataHeaders) {
     }
 }
 
-exports.static = function (scope, inst, args, data, next) {
+exports.static = function (scope, inst, args, data, stream, next) {
 
     if (!data.req || !data.res) {
         return next(new Error('Flow-static.static: No request or response stream found.'));
@@ -52,7 +52,7 @@ exports.static = function (scope, inst, args, data, next) {
         //.on('headers', headers)
         //.pipe(res.push(args.push.url, args.push.args || {}));
     //}
-    //console.log('Static file:', path.resolve(scope.env._appDir, args.wd || '', file));
+    console.log('Static file:', path.resolve(scope.env._appDir, args.wd || '', file));
     send(data.req, file)
     .on('error', function (err) {
         data.res.statusCode = err.status || 500;
@@ -61,5 +61,5 @@ exports.static = function (scope, inst, args, data, next) {
     .on('headers', (res, path) => headers(res, path, args.headers, data.headers))
     .pipe(data.res);
 
-    next(null, data);
+    next(null, data, stream);
 };
