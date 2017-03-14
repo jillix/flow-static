@@ -1,64 +1,40 @@
-var fs = require('fs');
-var path = require('path');
-var send = require('send');
-var isFile = /\/[^.]+\.[a-z0-9]+$/gi;
-var cwd = process.cwd();
-var url = require('url');
+'use strict';
+
+const path = require('path');
+const send = require('send');
 
 // your custom headers
-function headers(res, path, headers, dataHeaders) {
+function headers(res, path, headers) {
 
-    headers = dataHeaders ? Object.assign(headers, dataHeaders) : headers;
+    wf,
     if (headers) {
         Object.keys(headers).forEach(key => res.setHeader(key, headers[key]));
     }
 
-    // add http headers 
+    // add http headers
     if (path.substr(-3, 3) === '.js') {
         res.setHeader('Content-Encoding', 'gzip');
     }
 }
 
-exports.static = function (scope, inst, args, data, next) {
+module.exports = (config, req, res) => {
 
-    if (!data.req || !data.res) {
-        return next(new Error('Flow-static.static: No request or response stream found.'));
+    if (!req || !res) {
+        throw new Error('No request or response stream found.');
     }
 
-    var file = args.file || data.file || data.params.name || url.parse(data.req.url).pathname;
+    // resolve file path
+    const file = path.resolve(
+        config.appDir,
+        config.wd || '',
+        config.file
+    );
 
-    // normalize public path
-    file = path.normalize(file);
-
-    // add index.html to path
-    /*if (file[file.length-1] === '/') {
-        file = 'index.html';
-    }*/
-
-    // push the engine client directly
-    //if (args.push && res.push) {
-
-        /*push.args: {
-            request: {accept: '*'+'/'+'*'},
-            response: {
-                'Content-Type': 'application/javascript',
-                //'Content-Encoding': 'gzip',
-                'Content-Length': clientFile.length
-            }
-        }*/
-        //send(args.req, file, {root: path.join(this._env.workDir, args.wd || '')})
-        //.on('error', onError)
-        //.on('headers', headers)
-        //.pipe(res.push(args.push.url, args.push.args || {}));
-    //}
-    //console.log('Static file:', path.join(cwd, args.wd || ''), file);
-    send(data.req, file, {root: path.join(cwd, args.wd || '')})
+    send(req, file)
     .on('error', function (err) {
-        data.res.statusCode = err.status || 500;
-        data.res.end(err.stack);
+        res.statusCode = err.status || 500;
+        res.end(err.stack);
     })
-    .on('headers', (res, path) => headers(res, path, args.headers, data.headers))
-    .pipe(data.res);
-
-    next(null, data);
+    .on('headers', (res, path) => headers(res, path, config.headers))
+    .pipe(res);
 };
