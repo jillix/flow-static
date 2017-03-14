@@ -4,9 +4,8 @@ const path = require('path');
 const send = require('send');
 
 // your custom headers
-function headers(res, path, headers) {
+function headers (res, path, headers) {
 
-    wf,
     if (headers) {
         Object.keys(headers).forEach(key => res.setHeader(key, headers[key]));
     }
@@ -17,10 +16,10 @@ function headers(res, path, headers) {
     }
 }
 
-module.exports = (config, req, res) => {
+module.exports = (config, req, res, callback) => {
 
     if (!req || !res) {
-        throw new Error('No request or response stream found.');
+        return callback(new Error('No request or response stream found.'));
     }
 
     // resolve file path
@@ -31,10 +30,7 @@ module.exports = (config, req, res) => {
     );
 
     send(req, file)
-    .on('error', function (err) {
-        res.statusCode = err.status || 500;
-        res.end(err.stack);
-    })
+    .on('error', callback)
     .on('headers', (res, path) => headers(res, path, config.headers))
     .pipe(res);
 };
